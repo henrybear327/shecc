@@ -13083,6 +13083,21 @@ EOF
 
 # Extended compound literal tests (C99-style brace initialization)
 
+# An operand that opens with a brace is an array literal. It names nothing, so
+# no identifier lookup may decide how it parses.
+try_ 0 << EOF
+int main(void)
+{
+    long long v = {};
+    return (int) v;
+}
+EOF
+
+# A missing unary operand must produce a parser diagnostic.
+try_compile_error_message "Unrecognized expression token" << EOF
+int main(void) { return +; }
+EOF
+
 # Additional struct compound literals with different field counts
 try_ 12 << EOF
 typedef struct { int a; int b; int c; int d; } quad_t;
